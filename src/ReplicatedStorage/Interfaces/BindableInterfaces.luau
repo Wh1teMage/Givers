@@ -4,6 +4,8 @@ export type IBindableMethods = {
 	Once: (self: any, name: string, callback: (...any) -> ()) -> (),
 	Wait: (self: any, name: string, callback: {}, time: number) -> (),
 	DisconnectAll: (self: any) -> (),
+	Destroy: (self: any) -> (),
+	Fire: (self: any, name: string, data: any) -> (),
 }
 
 export type IBindableComponent = IBindableMethods & {
