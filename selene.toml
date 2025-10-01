@@ -1,0 +1,26 @@
+# selene.toml
+std = "roblox+testez"
+roblox-std-source = "pinned"
+
+exclude = [
+    "**/luau_packages/**",
+    "**/lune_packages/**", 
+    "**/roblox_packages/**",
+    "**/roblox_server_packages/**",
+    "**/.pesde/**"
+]
+
+[config]
+globals = [
+    "Givers",
+    "script",
+    "game", 
+    "workspace",
+    "_G",
+]
+
+[lints]
+undefined_variable = "deny"
+unused_variable = "warn"
+incorrect_standard_library_use = "allow"
+parenthese_conditions = "allow"
