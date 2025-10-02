@@ -60,4 +60,7 @@ function PlayerFabric:RemovePlayerByInstance(player: Player)
     component:Destroy()
 end
 
+local t = 1
+
+
 return PlayerFabric
