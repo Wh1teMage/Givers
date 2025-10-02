@@ -6,15 +6,15 @@ local Players = game:GetService('Players')
 
 local Components = ServerScriptService:WaitForChild('Components')
 local ServiceContainer = require(Components:WaitForChild('ServiceContainer'))
+local EntityComponent : any = require(Components:WaitForChild('EntityComponent'))
 
 local PlayerComponent = {}
 
 local Components = {}
 
 function PlayerComponent.new(player: Player)
-    local self = setmetatable({
-        Instance = player
-    }, {__index = PlayerComponent})
+    local base  = EntityComponent.new()
+    local self = setmetatable(base, {__index = PlayerComponent})
 
     self:Init()
 

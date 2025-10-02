@@ -3,7 +3,7 @@ export type IBindableMethods = {
 	GetConnections: (self: any, name: string) -> { (...any) -> () },
 	GetConnection: (self: any, name: string, scope: string) -> any,
 	Once: (self: any, name: string, callback: (...any) -> ()) -> (),
-	Wait: (self: any, name: string, callback: {}, time: number) -> (),
+	Wait: (self: any, name: string, callback: (...any) -> (), time: number?) -> (),
 	DisconnectAll: (self: any) -> (),
 	Destroy: (self: any) -> (),
 	AddMiddleware: (self: any, func: (...any) -> ()) -> (),
@@ -11,9 +11,9 @@ export type IBindableMethods = {
 }
 
 export type IBindableComponent = IBindableMethods & {
-	connections: { (...any) -> () },
-	once: { [string]: any },
-	middlewares: { [number]: (...any) -> () },
+	connections: { [string]: { (...any) -> () }},
+	onceConnections: { [string]: (...any) -> () },
+	middlewares: { [string]: (...any) -> () },
 }
 
 return {}
