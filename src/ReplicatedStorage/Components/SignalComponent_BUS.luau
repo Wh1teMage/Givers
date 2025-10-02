@@ -12,6 +12,7 @@ function EventBus.new()
     }, EventBus)
 end
 
+local t = 1 or 2 
 
 -- 🔹 Добавить middleware
 function EventBus:AddMiddleware(fn)
