@@ -74,7 +74,7 @@ function Methods:Destroy()
 end
 
 function Methods:AddMiddleware(func: (...any) -> ())
-	table.insert(self.middleware, func)
+	table.insert(self.middlewares, func)
 end
 
 function Methods:Fire(eventName: string, payload: any)
