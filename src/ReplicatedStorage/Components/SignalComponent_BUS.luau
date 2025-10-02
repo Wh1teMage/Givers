@@ -12,6 +12,7 @@ function EventBus.new()
     }, EventBus)
 end
 
+
 -- 🔹 Добавить middleware
 function EventBus:AddMiddleware(fn)
     table.insert(self._middlewares, fn)
