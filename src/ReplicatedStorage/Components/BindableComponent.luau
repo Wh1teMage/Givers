@@ -22,7 +22,7 @@ function BindableComponent.new(scope: string): BindableInterfaces.IBindableCompo
 end
 
 function Methods:Connect(name: string, callback: (...any) -> ())
-	local self: typeof(self) = self
+	self = self :: typeof(self)
 	if not self.connections[name] then
 		self.connections[name] = {}
 	end
@@ -47,11 +47,11 @@ function Methods:Once(name: string, callback: (...any) -> ())
 	end
 end
 
-function Methods:Wait(name: string, callback: {}, time: number)
+function Methods:Wait(name: string, callback: {}, Time: number)
 	self.Once[name](callback)
 
 	while self.once[name] do
-		task.wait(time)
+		task.wait(Time or 1)
 	end
 end
 
