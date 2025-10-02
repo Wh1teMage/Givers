@@ -14,7 +14,7 @@ function BindableComponent.new(scope: string): BindableInterfaces.IBindableCompo
 	local self = setmetatable({
 		connections = {},
 		once = {},
-		middleware = {},
+		middlewares = {},
 	}, Methods)
 	Signals[scope] = self
 
@@ -27,6 +27,13 @@ function Methods:Connect(name: string, callback: (...any) -> ())
 		self.connections[name] = {}
 	end
 	table.insert(self.connections[name], callback)
+end
+
+function Methods:GetConnection(name: string, scope: string)
+	if not self[scope][name] then
+		return
+	end
+	return self[scope][name]
 end
 
 function Methods:GetConnections(name: string): { (...any) -> () }
@@ -66,14 +73,19 @@ function Methods:Destroy()
 	end
 end
 
-function Methods:Fire(name: string, data: any)
-	for _, connect in pairs(self.connections) do
-		connect["callback"](data)
+function Methods:AddMiddleware(func: (...any) -> ())
+	table.insert(self.middlewares, func)
+end
+
+function Methods:Fire(eventName: string, payload: any)
+	local ctx = { name = eventName, data = payload }
+
+	for _, mv in ipairs(self.middlewares) do
+		mv(ctx)
 	end
 
-	for _, once in pairs(self.once) do
-		once["callback"](data)
-	end
+	local signal = self:GetConnection(eventName)
+	signal:Fire(ctx.data)
 end
 
 return BindableComponent
