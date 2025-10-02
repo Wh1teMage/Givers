@@ -11,16 +11,6 @@ Players.PlayerAdded:Connect(function(player)
     PlayerFabric:CreatePlayerFromInstance(player)
 end)
 
-local Contaier = require(Components:WaitForChild('Container'))
-
-for _,v in pairs(Containers:GetChildren()) do
-    if v:IsA('ModuleScript') then
-        require(v)
-    end
-end
-
-local test = {}
-test["1"] = true
-
-local charm = Contaier:get('TestService')
-print(charm)
+Players.PlayerRemoving:Connect(function(player)
+    PlayerFabric:RemovePlayerByInstance(player)
+end)
