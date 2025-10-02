@@ -37,7 +37,7 @@ export type IServices = {
 	Janitor: () -> typeof(janitor),
 }
 
-Services = {} 
+Services = {}
 
 Services['Charm'] = function()
     return charm
