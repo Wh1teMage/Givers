@@ -41,6 +41,13 @@ function Methods:Connect(name: string, callback: (...any) -> ())
 	table.insert(self.connections[name], callback)
 end
 
+function Methods:GetConnection(name: string, scope: string)
+	if not self[scope][name] then
+		return
+	end
+	return self[scope][name]
+end
+
 function Methods:GetConnections(name: string): { (...any) -> () }
 	self = self :: BindableInterfaces.IBindableComponent
 
