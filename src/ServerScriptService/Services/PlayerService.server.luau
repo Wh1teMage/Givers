@@ -5,12 +5,15 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Players = game:GetService('Players')
 
 local Components = ServerScriptService:WaitForChild('Components')
-local PlayerFabric = require(Components:WaitForChild('PlayerComponent'))
+local Fabrics = ServerScriptService:WaitForChild('Fabrics')
 
-Players.PlayerAdded:Connect(function(player)
-    PlayerFabric:CreatePlayerFromInstance(player)
-end)
+local Containers = ServerScriptService:WaitForChild('Containers')
 
-Players.PlayerRemoving:Connect(function(player)
-    PlayerFabric:RemovePlayerByInstance(player)
-end)
+local PlayerFabric = require(Fabrics:WaitForChild('PlayerFabric'))
+
+local Root = require(Containers.RootContainer).new()
+
+local playerFabric = PlayerFabric.new({ PlayerComponent = Root.Player.PlayerComponent })
+
+local pc = playerFabric:CreatePlayer()
+--pc.Data:LoadProfile()

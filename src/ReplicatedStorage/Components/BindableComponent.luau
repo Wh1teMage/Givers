@@ -1,17 +1,12 @@
 --!strict
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerScriptService = game:GetService("ServerScriptService")
-
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
-local Components = ServerScriptService:WaitForChild("Components")
+local Components = ReplicatedStorage:WaitForChild("Components")
 
 local BindableInterfaces = require(Interfaces:WaitForChild("BindableInterfaces"))
-local Container = require(Components:WaitForChild("ServiceContainer"))
 
 local BindableComponent = {}
-
-local Sift = Container.Sift()
 
 -- Импорт интерфейса
 
