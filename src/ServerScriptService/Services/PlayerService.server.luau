@@ -1,19 +1,20 @@
---!strict
-
 local ServerScriptService = game:GetService('ServerScriptService')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Players = game:GetService('Players')
 
 local Components = ServerScriptService:WaitForChild('Components')
 local Fabrics = ServerScriptService:WaitForChild('Fabrics')
+local IoCManager = ServerScriptService:WaitForChild('IoCManager')
 
 local Containers = ServerScriptService:WaitForChild('Containers')
 
-local PlayerFabric = require(Fabrics:WaitForChild('PlayerFabric'))
+local Registry = require(IoCManager:WaitForChild('Registry'))
 
-local Root = require(Containers.RootContainer).new()
+local Container = Registry.Build()
+local PlayerFabric = Container:get('PlayerFabric')
 
-local playerFabric = PlayerFabric.new({ PlayerComponent = Root.Player.PlayerComponent })
+print('PlayerFabric', PlayerFabric)
 
-local pc = playerFabric:CreatePlayer()
---pc.Data:LoadProfile()
+Players.PlayerAdded:Connect(function(player)
+    PlayerFabric:CreatePlayer(player)
+end)
