@@ -1,17 +1,12 @@
 --!strict
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerScriptService = game:GetService("ServerScriptService")
-
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
-local Components = ServerScriptService:WaitForChild("Components")
+local Components = ReplicatedStorage:WaitForChild("Components")
 
 local BindableInterfaces = require(Interfaces:WaitForChild("BindableInterfaces"))
-local Container = require(Components:WaitForChild("ServiceContainer"))
 
 local BindableComponent = {}
-
-local Sift = Container.Sift()
 
 -- Импорт интерфейса
 
@@ -39,6 +34,13 @@ function Methods:Connect(name: string, callback: (...any) -> ())
 	end
 
 	table.insert(self.connections[name], callback)
+end
+
+function Methods:GetConnection(name: string, scope: string)
+	if not self[scope][name] then
+		return
+	end
+	return self[scope][name]
 end
 
 function Methods:GetConnections(name: string): { (...any) -> () }
