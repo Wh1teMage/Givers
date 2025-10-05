@@ -1,22 +1,19 @@
 -- Registry.luau
 --!strict
 
-local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local IoCManager = ReplicatedStorage:WaitForChild('IoCManager')
-
-local Registry = require(IoCManager.Registry)
+local ContainerModule = require(script.Parent.Container)
 local Assemblies = script.Parent.Assemblies
 
 local function buildContainer()
-    local container = Registry.Build()
+    local registry = {}
 
     for _, assembly in pairs(Assemblies:GetChildren()) do
         for name, value in pairs(require(assembly) :: {[string]: any}) do
-            container.register((container :: any), name, value)
+            registry[name] = value
         end
     end
 
-    return container
+    return ContainerModule.new(registry)
 end
 
 return {
