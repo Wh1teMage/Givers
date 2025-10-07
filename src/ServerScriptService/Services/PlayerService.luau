@@ -10,7 +10,7 @@ PlayerService.Inject = {
 	Container = "Container"
 }
 
-function PlayerService.new(_: any)
+function PlayerService.new()
 	local self = setmetatable({}, PlayerService)
 	return self
 end

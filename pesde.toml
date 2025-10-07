@@ -15,6 +15,7 @@ default = "https://github.com/UpliftGames/wally-index"
 [scripts]
 roblox_sync_config_generator = ".pesde/scripts/roblox_sync_config_generator.luau"
 sourcemap_generator = ".pesde/scripts/sourcemap_generator.luau"
+generate_interfaces = ".pesde/scripts/generate_interfaces.luau"
 
 [dev_dependencies]
 scripts = { name = "pesde/scripts_rojo", version = "^0.2.0", target = "lune" }
@@ -37,3 +38,9 @@ t = { wally = "osyrisrblx/t", version = "3.1.1" }
 profilestore = { wally = "lm-loleris/profilestore", version = "^1.0.3" }
 testez = { wally = "roblox/testez", version = "0.4.1" }
 janitor = { wally = "howmanysmall/janitor", version = "1.18.3" }
+
+promise = { wally = "evaera/promise", version = "4.0.0" }
+typed-luau-promise = { wally = "trheliad/typed-luau-promise", version = "1.0.0" }
+jecs = { wally = "ukendio/jecs", version = "0.9.0" }
+jabby = { wally = "alicesaidhi/jabby", version = "0.4.0" }
+planck = { wally = "yetanotherclown/planck", version = "0.2.0" }
