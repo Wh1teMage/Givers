@@ -1,3 +1,4 @@
+--Main.luau
 --!strict
 
 local ServerScriptService = game:GetService('ServerScriptService')

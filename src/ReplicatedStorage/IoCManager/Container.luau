@@ -47,7 +47,7 @@ function Container:_createInstance(name: string)
     local obj
     if type(mod.new) == "function" then
         -- многие модули принимают deps таблицу: передаём resolvedDeps
-        obj = mod.new(resolvedDeps)
+        obj = mod.new()
     else
         -- fallback: если модуль просто таблица с методами, копируем как объект
         obj = setmetatable({}, { __index = mod })

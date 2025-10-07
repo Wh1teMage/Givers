@@ -1,11 +1,10 @@
 --!strict
 
+-- Загрузка модулей
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
-local ServerScriptService = game:GetService('ServerScriptService')
-
 local Packages = ReplicatedStorage:WaitForChild('Packages')
-local ServerPackages = ServerScriptService:WaitForChild('ServerPackages')
 
+-- Все вызовы require() и их привязка к переменным
 local charm = require(Packages:WaitForChild('charm'))
 local charmSync = require(Packages:WaitForChild('charm-sync'))
 local react = require(Packages:WaitForChild('react'))
@@ -18,12 +17,26 @@ local t = require(Packages:WaitForChild('t'))
 local testez = require(Packages:WaitForChild('testez'))
 local janitor = require(Packages:WaitForChild('janitor'))
 
-export type PlayerDependecies = {
-    ProfileStore: any,
-    Sift: any,
-}
+local jecs = require(Packages:WaitForChild('jecs'))
+local promise = require(Packages:WaitForChild('typed-luau-promise'))
+local jabby = require(Packages:WaitForChild('jabby'))
+local planck = require(Packages:WaitForChild('planck'))
 
-export type DataDependecies = {
-    Entity: any,
-    Data: any,
+return {
+    Charm = charm,
+    CharmSync = charmSync,
+    React = react,
+    ReactRoblox = reactRoblox,
+    ReactCharm = reactCharm,
+    Ripple = ripple,
+    UiLabs = uiLabs,
+    Sift = sift,
+    T = t,
+    Testez = testez,
+    Janitor = janitor,
+
+    Jecs = jecs,
+    Promise = promise,
+    Jabby = jabby,
+    Planck = planck,
 }
