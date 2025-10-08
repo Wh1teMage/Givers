@@ -1,3 +1,8 @@
+local Intefaces = script.Parent
+local PackagesInterfaces = require(Intefaces.PackagesInterfaces)
+
+type Promise = typeof(PackagesInterfaces.Promise)
+
 export type IBindableMethods = {
 	Connect: (self: any, name: string, callback: (...any) -> ()) -> (),
 	GetConnections: (self: any, name: string) -> { (...any) -> () },
@@ -14,6 +19,8 @@ export type IBindableComponent = IBindableMethods & {
 	connections: { [string]: { (...any) -> () }},
 	onceConnections: { [string]: (...any) -> () },
 	middlewares: { [string]: (...any) -> () },
+
+	Promise: Promise,
 }
 
 return {}

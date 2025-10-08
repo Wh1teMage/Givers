@@ -1,16 +1,27 @@
+--!strict
+local ServerScriptService = game:GetService('ServerScriptService')
+local Interfaces = ServerScriptService.GeneratedInterfaces
+
+local ContainerInterface = require(Interfaces.ContainerInterface)
+local WorldServiceInterface = require(Interfaces.WorldServiceInterface)
+
 local PlayerFabric = {}
-PlayerFabric.__index = PlayerFabric
 
 PlayerFabric.Scope = 'Singleton'
-
 PlayerFabric.Inject = {
     Container = 'Container',
+    WorldService = 'WorldService',
 }
+
+export type Main = { 
+    WorldService: WorldServiceInterface.IWorldService,
+    Container: ContainerInterface.IContainer,
+} & typeof(PlayerFabric)
 
 local Components = {}
 
-function PlayerFabric.new(_: any)
-    local self = setmetatable({}, PlayerFabric)
+function PlayerFabric.new()
+    local self = setmetatable({}, {__index = PlayerFabric})
 
     print('created', self)
 
@@ -20,16 +31,18 @@ end
 function PlayerFabric:CreatePlayer(player: Player)
     if Components[player] then return end
 
-    local container = self.Container
+    self = self :: Main
 
-    local component = container:createWithArgs('PlayerComponent', { Instance = player })
-    local dataComponent = container:createWithArgs('DataComponent', { Player = component })
+    local world = self.WorldService.World
 
-    component.DataComponent = dataComponent
+    local entity = world:entity()
+    --world:set(id, component)
 
-    component:Init()
+    return entity
+end
 
-    return component
+function PlayerFabric:GetPlayer()
+
 end
 
 return PlayerFabric

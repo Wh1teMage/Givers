@@ -15,6 +15,11 @@ local t = require(Packages:WaitForChild('t'))
 local testez = require(Packages:WaitForChild('testez'))
 local janitor = require(Packages:WaitForChild('janitor'))
 
+local jecs = require(Packages:WaitForChild('jecs'))
+local promise = require(Packages:WaitForChild('typed-luau-promise'))
+local jabby = require(Packages:WaitForChild('jabby'))
+local planck = require(Packages:WaitForChild('planck'))
+
 return {
     Charm = charm,
     CharmSync = charmSync,
@@ -27,4 +32,9 @@ return {
     T = t,
     Testez = testez,
     Janitor = janitor,
+
+    Jecs = jecs,
+    Promise = promise,
+    Jabby = jabby,
+    Planck = planck,
 }
