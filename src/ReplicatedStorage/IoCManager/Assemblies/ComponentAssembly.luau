@@ -1,6 +1,6 @@
 --!strict
 
-local ServerScriptService = game:GetService('ServerScriptService')
+local ServerScriptService = game:GetService('ReplicatedStorage')
 local Components = ServerScriptService:WaitForChild('Components')
 
 local requires = {}

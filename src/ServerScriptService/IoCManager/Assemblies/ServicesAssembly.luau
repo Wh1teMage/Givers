@@ -3,8 +3,10 @@
 local ServerScriptService = game:GetService('ServerScriptService')
 local Services = ServerScriptService:WaitForChild('Services')
 
-local PlayerService = require(Services.PlayerService)
+local requires = {}
 
-return {
-  PlayerService = PlayerService,
-}
+for _, object: ModuleScript in pairs(Services:GetChildren()) do
+    requires[object.Name] = require(object) :: {}
+end
+
+return requires

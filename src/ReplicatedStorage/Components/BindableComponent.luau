@@ -12,20 +12,14 @@ BindableComponent.Inject = {
 	Promise = 'Promise',
 }
 
-local Signals = {}
-
 local Methods = {}
 
-function BindableComponent.new(scope: string): BindableInterfaces.IBindableComponent
-	if (Signals[scope]) then return Signals[scope] end
-
+function BindableComponent.new(): BindableInterfaces.IBindableComponent
 	local component = setmetatable({
 		connections = {},
 		onceConnections = {},
 		middlewares = {},
-	}, Methods)
-
-	Signals[scope] = component
+	}, {__index = Methods})
 
 	return component :: any
 end
@@ -140,5 +134,7 @@ function Methods:Fire(eventName: string, payload: any)
 	end
 
 end
+
+export type Main = typeof(Methods)
 
 return BindableComponent

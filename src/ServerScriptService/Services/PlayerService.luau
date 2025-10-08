@@ -1,5 +1,8 @@
 -- PlayerService.luau
 --!strict
+local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
+local BindableInterfaces = require(game.ReplicatedStorage.Interfaces.BindableInterfaces)
+
 local Players = game:GetService("Players")
 
 local PlayerService = {}
@@ -7,8 +10,14 @@ PlayerService.__index = PlayerService
 
 PlayerService.Scope = "Singleton"
 PlayerService.Inject = {
-	Container = "Container"
+	Container = "Container",
+	BindableComponent = "BindableComponent"
 }
+
+export type Main = { 
+	BindableComponent: BindableInterfaces.IBindableComponent,
+    Container: ContainerInterface.IContainer,
+} & typeof(PlayerService)
 
 function PlayerService.new()
 	local self = setmetatable({}, PlayerService)
@@ -16,10 +25,10 @@ function PlayerService.new()
 end
 
 function PlayerService:Init()
-	local PlayerFabric = self.Container:get("PlayerFabric")
+	self = self :: Main
 
 	Players.PlayerAdded:Connect(function(player)
-		PlayerFabric:CreatePlayer(player)
+		self.BindableComponent:Fire('PlayerAdded', player)
 	end)
 
 	print("[PlayerService] initialized")
