@@ -2,26 +2,24 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
-local Components = ReplicatedStorage:WaitForChild("Components")
 
 local BindableInterfaces = require(Interfaces:WaitForChild("BindableInterfaces"))
 
 local BindableComponent = {}
 
--- Импорт интерфейса
-
-local Signals = {}
+BindableComponent.Scope = 'Singleton'
+BindableComponent.Inject = {
+	Promise = 'Promise',
+}
 
 local Methods = {}
 
-function BindableComponent.new(scope: string): BindableInterfaces.IBindableComponent
+function BindableComponent.new(): BindableInterfaces.IBindableComponent
 	local component = setmetatable({
 		connections = {},
 		onceConnections = {},
 		middlewares = {},
-	}, Methods)
-
-	Signals[scope] = component
+	}, {__index = Methods})
 
 	return component :: any
 end
@@ -58,15 +56,34 @@ function Methods:Once(name: string, callback: (...any) -> ())
 	end
 end
 
-function Methods:Wait(name: string, callback: (...any) -> (), time: number?)
+function Methods:Wait(name: string, callback: (...any) -> (), timeout: number?)
 	self = self :: BindableInterfaces.IBindableComponent
 
-	self:Once(name, callback)
-	local start = os.clock()
+	if (not timeout) then timeout = 5 end
 
-	while self.onceConnections[name] and (os.clock() - start) < (time or 5) do
-		task.wait(2/60)
-	end
+	local promise = self.Promise.new(function(resolve, reject, cancel)
+
+		self:Once(name, function(context)
+			resolve(context)
+		end)
+
+		cancel(function()
+			self.onceConnections[name] = nil
+			reject("Cancelled")
+
+			return true
+		end)
+
+
+		task.delay(timeout, function()
+			if (not self.onceConnections[name]) then return end
+
+			self.onceConnections[name] = nil
+			reject(`Timeout of {timeout} seconds waiting for {name}`)
+		end)
+	end)
+
+	return promise
 end
 
 function Methods:DisconnectAll()
@@ -124,5 +141,7 @@ function Methods:Fire(eventName: string, payload: any)
 	end
 
 end
+
+export type Main = typeof(Methods)
 
 return BindableComponent
