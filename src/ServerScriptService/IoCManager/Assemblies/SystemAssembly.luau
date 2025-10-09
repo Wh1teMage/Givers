@@ -1,11 +1,11 @@
 --!strict
 
 local ServerScriptService = game:GetService('ServerScriptService')
-local Fabrics = ServerScriptService:WaitForChild('Fabrics')
+local Systems = ServerScriptService:WaitForChild('Systems')
 
 local requires = {}
 
-for _, object: ModuleScript in pairs(Fabrics:GetChildren()) do
+for _, object: ModuleScript in pairs(Systems:GetChildren()) do
     requires[object.Name] = require(object) :: {}
 end
 

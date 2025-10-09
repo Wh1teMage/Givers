@@ -1,15 +1,22 @@
 --Main.luau
 --!strict
 
-local ServerScriptService = game:GetService('ServerScriptService')
-local IoCManager = ServerScriptService:WaitForChild('IoCManager')
+local ServerScriptService = game:GetService("ServerScriptService")
+local IoCManager = ServerScriptService:WaitForChild("IoCManager")
 
-local Registry = require(IoCManager:WaitForChild('Registry'))
+local Registry = require(IoCManager:WaitForChild("Registry"))
 
 local Container = Registry.Build()
 
-local PlayerService = Container.get((Container :: any), 'PlayerService')
+print(Container)
 
-print(PlayerService)
+local PlayerService = Container.get(Container :: any, "PlayerService")
+local WorldService = Container.get(Container :: any, "WorldService")
+local PlayerSystem = Container.get(Container :: any, "PlayerSystem")
+local DataFabric = Container.get(Container :: any, "DataFabric")
 
+WorldService:Init()
+PlayerSystem:Init()
 PlayerService:Init()
+DataFabric:Init()
+
