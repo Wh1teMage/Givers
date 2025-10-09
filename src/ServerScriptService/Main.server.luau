@@ -8,14 +8,15 @@ local Registry = require(IoCManager:WaitForChild("Registry"))
 
 local Container = Registry.Build()
 
+print(Container)
+
 local PlayerService = Container.get(Container :: any, "PlayerService")
 local WorldService = Container.get(Container :: any, "WorldService")
 local PlayerSystem = Container.get(Container :: any, "PlayerSystem")
---local DataFabric = Container.get(Container :: any, "DataFabric")
-
-print(PlayerService)
+local DataFabric = Container.get(Container :: any, "DataFabric")
 
 WorldService:Init()
 PlayerSystem:Init()
 PlayerService:Init()
---DataFabric:Init()
+DataFabric:Init()
+

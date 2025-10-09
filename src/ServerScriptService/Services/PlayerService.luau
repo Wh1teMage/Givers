@@ -1,7 +1,7 @@
 -- PlayerService.luau
 --!strict
 local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
-local BindableInterfaces = require(game.ReplicatedStorage.Interfaces.BindableInterfaces)
+local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 
 local Players = game:GetService("Players")
 
@@ -27,9 +27,19 @@ end
 function PlayerService:Init()
 	self = self :: Main
 
+	print(self.BindableComponent)
+
 	Players.PlayerAdded:Connect(function(player)
-		self.BindableComponent:Fire('PlayerAdded', player)
+		print(player)
+		self.BindableComponent:Fire('PlayerAdded', {Player = player})
 	end)
+
+	--[[
+	self.BindableComponent:Wait('PlayerAdded', function(...)
+		print(...)
+	end)
+	]]
+	
 
 	print("[PlayerService] initialized")
 end

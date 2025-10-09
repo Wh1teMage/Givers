@@ -14,12 +14,14 @@ local ProfileTemplate = require(ReplicatedStorage.Templates:WaitForChild("DataPr
 
 local DataFabric = {}
 
+local DATA_SCOPE = 'Main'
+
 DataFabric.Scope = "Singleton"
 DataFabric.Inject = {
-	Container = "Contatiner",
+	Container = "Container",
 	WorldService = "WorldService",
 	Jecs = "Jecs",
-
+	
 	profilestore = "ProfileStore",
 }
 
@@ -30,7 +32,7 @@ export type Main = {
 	profilestore: typeof(profilestore),
 } & typeof(DataFabric) & {
 	Data: typeof(PackagesInterfaces.Jecs.World.new():component()),
-	ProfileScope: typeof(profilestore.New("Test", ProfileTemplate())),
+	ProfileScope: typeof(profilestore.New(DATA_SCOPE, ProfileTemplate())),
 }
 
 function DataFabric.new()
@@ -44,7 +46,7 @@ function DataFabric:Init()
 
 	self.Data = world:component()
 
-	local ScopedProfile = self.profilestore.New("Test", ProfileTemplate())
+	local ScopedProfile = self.profilestore.New(DATA_SCOPE, ProfileTemplate())
 	self.ProfileScope = ScopedProfile
 end
 

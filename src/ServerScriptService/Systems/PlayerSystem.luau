@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(Interfaces.BindableInterfaces)
+local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 
 local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
 local PlayerFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.PlayerFabricInterface)
@@ -30,8 +30,8 @@ end
 function PlayerSystem:Init()
 	self = self :: Main
 
-	self.BindableComponent:Connect("PlayerAdded", function(player: Player)
-		self.PlayerFabric:CreatePlayer(player)
+	self.BindableComponent:Connect("PlayerAdded", function(payload: {Player: Player})
+		self.PlayerFabric:CreatePlayer(payload.Player)
 	end)
 end
 

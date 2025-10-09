@@ -42,7 +42,7 @@ function PlayerFabric:CreatePlayer(player: Player)
 
 	local entity = world:entity()
 	--world:set(id, component)
-
+	
 	self.DataFabric:LoadProfile(player.UserId)
 
 	return entity
