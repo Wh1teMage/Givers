@@ -69,10 +69,11 @@ function Methods:Once(name: string, callback: ({[string]: any}) -> ())
 end
 
 function Methods:Wait(name: string, timeout: number?)
-	self = self :: Main
+	self = self :: any :: Main
 
 	if (not timeout) then timeout = 5 end
 	
+
 
 	local promise = self.Promise.new(function(resolve, reject, cancel)
 
