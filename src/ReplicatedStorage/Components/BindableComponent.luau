@@ -64,12 +64,15 @@ function Methods:Once(name: string, callback: ({[string]: any}) -> ())
 		self.onceConnections[name] = nil
 		callback(...)
 	end
+
+	
 end
 
 function Methods:Wait(name: string, timeout: number?)
 	self = self :: Main
 
 	if (not timeout) then timeout = 5 end
+
 
 	local promise = self.Promise.new(function(resolve, reject, cancel)
 
