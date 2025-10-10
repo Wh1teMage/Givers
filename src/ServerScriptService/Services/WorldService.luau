@@ -6,6 +6,7 @@ local Interfaces = ReplicatedStorage:WaitForChild('Interfaces')
 local PackagesInterfaces = require(Interfaces.PackagesInterfaces)
 
 local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
+local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
 
 local WorldService = {}
 WorldService.__index = WorldService
@@ -20,7 +21,7 @@ export type Main = {
     Container: ContainerInterface.IContainer,
     Jecs: typeof(PackagesInterfaces.Jecs),
 } & typeof(WorldService) & {
-    World: typeof(PackagesInterfaces.Jecs.World.new())
+    World: JecsInterfaces.World
 }
 
 function WorldService.new()
@@ -31,7 +32,7 @@ end
 function WorldService:Init()
     self = self :: Main
 
-    self.World = self.Jecs.World.new()
+    self.World = self.Jecs.world()
 end
 
 return WorldService

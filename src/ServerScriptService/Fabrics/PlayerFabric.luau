@@ -1,40 +1,40 @@
 --!strict
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local Interfaces = ServerScriptService.GeneratedInterfaces
 
-local ContainerInterface = require(Interfaces.ContainerInterface)
 local DataFabricInterface = require(Interfaces.DataFabricInterface)
 local WorldServiceInterface = require(Interfaces.WorldServiceInterface)
+local PlayerComponentInterface = require(Interfaces.PlayerComponentInterface)
+
+local PackagesInterfaces = require(ReplicatedStorage.Interfaces.PackagesInterfaces)
 
 local PlayerFabric = {}
 
 PlayerFabric.Scope = "Singleton"
 PlayerFabric.Inject = {
-	Container = "Container",
+	PlayerComponent = "PlayerComponent",
 	WorldService = "WorldService",
 	DataFabric = "DataFabric",
 }
 
+type component = typeof(PackagesInterfaces.Jecs.World.new():component())
+
 export type Main = {
 	WorldService: WorldServiceInterface.IWorldService,
-	Container: ContainerInterface.IContainer,
 	DataFabric: DataFabricInterface.IDataFabric,
+	PlayerComponent: PlayerComponentInterface.IPlayerComponent,
 } & typeof(PlayerFabric)
 
 local Components = {}
 
 function PlayerFabric.new()
 	local self = setmetatable({}, { __index = PlayerFabric })
-
-	print("created", self)
-
 	return self
 end
 
 function PlayerFabric:CreatePlayer(player: Player)
-	if Components[player] then
-		return
-	end
+	if Components[player] then warn(`{player} already exists`); return Components[player] end
 
 	self = self :: Main
 
@@ -43,11 +43,18 @@ function PlayerFabric:CreatePlayer(player: Player)
 	local entity = world:entity()
 	--world:set(id, component)
 	
-	self.DataFabric:LoadProfile(player.UserId)
+	local profile = self.DataFabric:LoadProfile(player.UserId)
+
+	world:set(entity, self.PlayerComponent.ProfileLink, profile)
+	world:set(entity, self.PlayerComponent.PlayerInstance, player)
+
+	Components[player] = entity
 
 	return entity
 end
 
-function PlayerFabric:GetPlayer() end
+function PlayerFabric:GetPlayer(player: Player) 
+	return Components[player]
+end
 
 return PlayerFabric

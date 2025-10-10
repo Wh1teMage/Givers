@@ -31,7 +31,8 @@ function PlayerSystem:Init()
 	self = self :: Main
 
 	self.BindableComponent:Connect("PlayerAdded", function(payload: {Player: Player})
-		self.PlayerFabric:CreatePlayer(payload.Player)
+		local entity = self.PlayerFabric:CreatePlayer(payload.Player)
+		self.BindableComponent:Fire("PlayerLoaded", { Entity = entity })
 	end)
 end
 
