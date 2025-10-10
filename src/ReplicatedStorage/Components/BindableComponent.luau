@@ -74,6 +74,7 @@ function Methods:Wait(name: string, timeout: number?)
 	if (not timeout) then timeout = 5 end
 	
 
+
 	local promise = self.Promise.new(function(resolve, reject, cancel)
 
 		self:Once(name, function(context)
