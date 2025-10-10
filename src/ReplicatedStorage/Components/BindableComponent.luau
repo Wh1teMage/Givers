@@ -69,7 +69,7 @@ function Methods:Once(name: string, callback: ({[string]: any}) -> ())
 end
 
 function Methods:Wait(name: string, timeout: number?)
-	self = self :: any :: Main
+	self = self :: Main
 
 	if (not timeout) then timeout = 5 end
 	
