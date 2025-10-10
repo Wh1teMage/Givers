@@ -20,3 +20,11 @@ PlayerSystem:Init()
 PlayerService:Init()
 DataFabric:Init()
 
+local sorted = Container:resolveInitOrder({
+	WorldService = WorldService,
+	PlayerSystem = PlayerSystem,
+	PlayerService = PlayerService,
+	DataFabric = DataFabric
+})
+
+print(sorted)

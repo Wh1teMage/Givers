@@ -60,12 +60,24 @@ function Methods:Once(name: string, callback: (...any) -> ())
 		self.onceConnections[name] = nil
 		callback()
 	end
+
+	
 end
 
+function Methods:Testso()
+	self = self
+
+	local promise = self.new
+
+	return promise
+end
+
+
 function Methods:Wait(name: string, callback: (...any) -> (), timeout: number?)
-	self = self --:: BindableInterfaces.IBindableComponent
+	self = self :: any --:: BindableInterfaces.IBindableComponent
 
 	if (not timeout) then timeout = 5 end
+
 
 	local promise = self.Promise.new(function(resolve, reject, cancel)
 

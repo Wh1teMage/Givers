@@ -29,6 +29,10 @@ function PlayerService:Init()
 
 	print(self.BindableComponent)
 
+	self.BindableComponent:Wait('t',function()end,1)
+
+	--self.BindableComponent:Testso()
+
 	Players.PlayerAdded:Connect(function(player)
 		print(player)
 		self.BindableComponent:Fire('PlayerAdded', {Player = player})

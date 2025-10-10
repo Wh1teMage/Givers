@@ -106,4 +106,38 @@ function Container:override(name: string, moduleTable: any)
     self._registry[name] = moduleTable
 end
 
+
+function Container:resolveInitOrder(systems) : any
+    local visited = {}
+    local order = {}
+
+    local function visit(name)
+        if visited[name] == "temp" then
+            error("Cyclic dependency detected at: " .. name)
+        end
+        if not visited[name] then
+            visited[name] = "temp"
+
+            local sys = systems[name]
+            if sys and sys.Inject then
+                for _, depName in pairs(sys.Inject) do
+                    if systems[depName] then
+                        visit(depName)
+                    end
+                end
+            end
+
+            visited[name] = true
+            table.insert(order, name)
+        end
+    end
+
+    for name in pairs(systems) do
+        visit(name)
+    end
+
+    return order
+
+end
+
 return Container
