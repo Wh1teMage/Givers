@@ -20,8 +20,15 @@ local DataProfile = {
 
 return function(): typeof(DataProfile)
 	local clonned = table.clone(DataProfile)
+
 	clonned.Values = table.clone(DataProfile.Values)
 	clonned.Multipliers = table.clone(DataProfile.Multipliers)
-	clonned.Inventory = table.clone(DataProfile.Inventory)
+	
+	clonned.Inventory = {
+		Equipment = {},
+		Consumables = {},
+		Resources = {},
+	}
+
 	return clonned
 end

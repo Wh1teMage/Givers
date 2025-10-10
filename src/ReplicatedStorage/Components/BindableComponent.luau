@@ -5,6 +5,8 @@ local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
 --local BindableInterfaces = require(Interfaces:WaitForChild("BindableInterfaces"))
 
+local PackagesInterfaces = require(Interfaces.PackagesInterfaces)
+
 local BindableComponent = {}
 
 BindableComponent.Scope = 'Singleton'
@@ -18,6 +20,8 @@ export type Main = typeof(Methods) & {
 	connections: {},
 	onceConnections: {},
 	middlewares: {},
+} & {
+	Promise: typeof(PackagesInterfaces.Promise)
 }
 
 function BindableComponent.new()
@@ -30,7 +34,7 @@ function BindableComponent.new()
 	return component
 end
 
-function Methods:Connect(name: string, callback: (...any) -> ())
+function Methods:Connect(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	if not self.connections[name] then
@@ -47,34 +51,25 @@ function Methods:GetConnection(name: string, scope: string)
 	return self[scope][name]
 end
 
-function Methods:GetConnections(name: string): { (...any) -> () }
+function Methods:GetConnections(name: string): { ({[string]: any}) -> () }
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	return self.connections[name]
 end
 
-function Methods:Once(name: string, callback: (...any) -> ())
+function Methods:Once(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 
-	self.onceConnections[name] = function()
+	self.onceConnections[name] = function(...)
 		self.onceConnections[name] = nil
-		callback()
+		callback(...)
 	end
 
 	
 end
 
-function Methods:Testso()
-	self = self
-
-	local promise = self.new
-
-	return promise
-end
-
-
-function Methods:Wait(name: string, callback: (...any) -> (), timeout: number?)
-	self = self :: any --:: BindableInterfaces.IBindableComponent
+function Methods:Wait(name: string, timeout: number?)
+	self = self :: any :: Main
 
 	if (not timeout) then timeout = 5 end
 
@@ -134,7 +129,7 @@ function Methods:Destroy()
 	setmetatable(self, nil)
 end
 
-function Methods:AddMiddleware(name: string, callback: (...any) -> ())
+function Methods:AddMiddleware(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 	self.middlewares[name] = callback
 end

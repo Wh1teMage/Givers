@@ -22,6 +22,8 @@ local promise = require(Packages:WaitForChild('typed-luau-promise'))
 local jabby = require(Packages:WaitForChild('jabby'))
 local planck = require(Packages:WaitForChild('planck'))
 
+export type Jecs = jecs.Entity
+
 return {
     Charm = charm,
     CharmSync = charmSync,

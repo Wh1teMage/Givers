@@ -1,6 +1,8 @@
 -- Container.luau
 --!strict
 
+local ignoreList = { 'Promise' }
+
 local Container = {}
 Container.__index = Container
 
@@ -45,7 +47,7 @@ function Container:_createInstance(name: string)
     -- Создаём объект: если модуль содержит конструктор new(deps, ...)
 
     local obj
-    if type(mod.new) == "function" then
+    if (type(mod.new) == "function" and (not table.find(ignoreList, name))) then
         -- многие модули принимают deps таблицу: передаём resolvedDeps
         obj = mod.new()
     else
@@ -57,6 +59,12 @@ function Container:_createInstance(name: string)
     for field, dep in pairs(resolvedDeps) do
         obj[field] = dep
     end
+
+    --[[
+    if (type(mod.Init) == "function") then
+        mod:Init()
+    end
+    ]]
 
     self._constructing[name] = nil
     return obj

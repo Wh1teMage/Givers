@@ -29,12 +29,11 @@ function PlayerService:Init()
 
 	print(self.BindableComponent)
 
-	self.BindableComponent:Wait('t',function()end,1)
-
-	--self.BindableComponent:Testso()
+	self.BindableComponent:Wait("PlayerAdded", 60):andThen(function(test)
+		print('ello', test)
+	end)
 
 	Players.PlayerAdded:Connect(function(player)
-		print(player)
 		self.BindableComponent:Fire('PlayerAdded', {Player = player})
 	end)
 
@@ -43,7 +42,6 @@ function PlayerService:Init()
 		print(...)
 	end)
 	]]
-	
 
 	print("[PlayerService] initialized")
 end
