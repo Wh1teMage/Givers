@@ -37,12 +37,13 @@ function CoinSystem:Init()
 	self = self :: Main
 
 	local world = self.WorldService.World
-
+	
 	self.BindableComponent:Connect("PlayerLoaded", function(payload: {Entity: JecsInterfaces.Entity})
 		local profileLinkEntity = world:get(payload.Entity, self.PlayerComponent.ProfileLink)
 		assert(profileLinkEntity, 'profile link doesnt exist!')
 
 		print(world:get(profileLinkEntity, self.DataComponent.Data))
+
 	end)
 end
 

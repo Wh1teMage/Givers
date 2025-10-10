@@ -114,38 +114,32 @@ function Container:override(name: string, moduleTable: any)
     self._registry[name] = moduleTable
 end
 
+function Container:TreeSorted(name,temp)
 
-function Container:resolveInitOrder(systems) : any
-    local visited = {}
-    local order = {}
-
-    local function visit(name)
-        if visited[name] == "temp" then
-            error("Cyclic dependency detected at: " .. name)
-        end
-        if not visited[name] then
-            visited[name] = "temp"
-
-            local sys = systems[name]
-            if sys and sys.Inject then
-                for _, depName in pairs(sys.Inject) do
-                    if systems[depName] then
-                        visit(depName)
-                    end
-                end
-            end
-
-            visited[name] = true
-            table.insert(order, name)
-        end
+    for _,v in pairs(self._singletons[name]['Inject']) do 
+        local module = self._singletons[v]
+        if (not module) or (not module['Init']) or (temp[v]) then continue end
+        temp[v] = true
+        module['Init'](module)
     end
 
-    for name in pairs(systems) do
-        visit(name)
+    return temp
+end
+
+function Container:resolveInitOrder()
+    local temp = {}
+
+    for name,_ in pairs(self._registry) do 
+        self:get(name)
     end
 
-    return order
-
+    for name,module in pairs(self._singletons) do
+        if (not module['Init']) or temp[name] then continue end
+        temp[name] = true
+        temp = self:TreeSorted(name,temp)
+        module['Init'](module)
+    end 
+    
 end
 
 return Container

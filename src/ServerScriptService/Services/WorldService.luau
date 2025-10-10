@@ -31,7 +31,6 @@ end
 
 function WorldService:Init()
     self = self :: Main
-
     self.World = self.Jecs.world()
 end
 
