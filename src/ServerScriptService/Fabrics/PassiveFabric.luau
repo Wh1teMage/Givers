@@ -43,4 +43,6 @@ function PassiveFabric:CreatePassive(Type: string, Name: string, Level: number)
 	return entity
 end
 
+
+
 return PassiveFabric

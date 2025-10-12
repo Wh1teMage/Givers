@@ -115,14 +115,17 @@ function Container:override(name: string, moduleTable: any)
 end
 
 function Container:TreeSorted(name,temp)
+    if (not self._singletons[name]) or (not self._singletons[name]['Inject']) then return temp end
 
     for _,v in pairs(self._singletons[name]['Inject']) do 
         local module = self._singletons[v]
-        if (not module) or (not module['Init']) or (temp[v]) then continue end
+        if (not module) or (not module['Init']) or (temp[v]) then 
+            if (module) and module['Inject'] and (not temp[v]) then temp = self:TreeSorted(v, temp) end
+            continue
+        end
         temp[v] = true
         module['Init'](module)
     end
-
     return temp
 end
 
@@ -132,7 +135,7 @@ function Container:resolveInitOrder()
     for name,_ in pairs(self._registry) do 
         self:get(name)
     end
-
+    
     for name,module in pairs(self._singletons) do
         if (not module['Init']) or temp[name] then continue end
         temp[name] = true
