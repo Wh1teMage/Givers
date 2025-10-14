@@ -38,10 +38,20 @@ function ComponentFabric:Init()
         return 
     end
 
+    self.Components = {} :: ComponentInterfaces.Components
+    assert(self.Components)
+
     local world = self.WorldService.World
 
     for _, module in ipairs(Components:GetChildren()) do
-        self[module.Name] = world:component()
+        local data = require(module) :: {string}
+        local scope = {}
+
+        for _, dataType in ipairs(data) do
+            scope[dataType] = world:component()
+        end
+
+        self.Components[module.Name] = scope :: any
     end
 end
 
