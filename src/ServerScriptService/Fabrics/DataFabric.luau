@@ -24,6 +24,17 @@ DataFabric.Inject = {
 	Jecs = "Jecs",
 }
 
+local function test(world)
+	return {
+		Passive = world:component("Passive"),
+		Health = world:component("Health"),
+		Mana = world:component("Mana"),
+		AbilityRequest = world:component("AbilityRequest"),
+		Cooldown = world:component("Cooldown"),
+	}
+end
+
+
 export type Main = {
 	DataComponent: DataComponentInterface.IDataComponent,
 	WorldService: WorldServiceInterface.IWorldService,

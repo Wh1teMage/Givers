@@ -16,6 +16,7 @@ default = "https://github.com/UpliftGames/wally-index"
 roblox_sync_config_generator = ".pesde/scripts/roblox_sync_config_generator.luau"
 sourcemap_generator = ".pesde/scripts/sourcemap_generator.luau"
 generate_interfaces = ".pesde/scripts/generate_interfaces.luau"
+generate_component_interfaces = ".pesde/scripts/generate_component_interfaces.luau"
 
 [dev_dependencies]
 scripts = { name = "pesde/scripts_rojo", version = "^0.2.0", target = "lune" }

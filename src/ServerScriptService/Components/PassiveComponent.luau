@@ -33,8 +33,8 @@ function PassiveComponent:Init()
 	self = self :: Main
 	local world = self.WorldService.World
 
-	self.Data = world:component() :: JecsInterfaces.Entity<DataType>
-	self.Passive = world:component() :: JecsInterfaces.Entity<>
+	self.Data = world:component()
+	self.Passive = world:component()
 end
 
 return PassiveComponent

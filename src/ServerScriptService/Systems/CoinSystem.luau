@@ -7,6 +7,7 @@ local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
 local PlayerComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.PlayerComponentInterface)
 local DataComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.DataComponentInterface)
+local ComponentFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.ComponentFabricInterface)
 
 local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
 
@@ -19,6 +20,7 @@ CoinSystem.Inject = {
 	DataComponent = "DataComponent",
     WorldService = "WorldService",
 	BindableComponent = "BindableComponent",
+	ComponentFabric = "ComponentFabric",
 }
 
 export type Main = {
@@ -26,6 +28,7 @@ export type Main = {
 	DataComponent: DataComponentInterface.IDataComponent,
 	BindableComponent: BindableInterfaces.IBindableComponent,
     WorldService: WorldServiceInterface.IWorldService,
+	ComponentFabric: ComponentFabricInterface.IComponentFabric,
 } & typeof(CoinSystem)
 
 function CoinSystem.new()
@@ -43,7 +46,6 @@ function CoinSystem:Init()
 		assert(profileLinkEntity, 'profile link doesnt exist!')
 
 		print(world:get(profileLinkEntity, self.DataComponent.Data))
-
 	end)
 end
 
