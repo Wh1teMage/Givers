@@ -16,16 +16,12 @@ CoinSystem.__index = CoinSystem
 
 CoinSystem.Scope = "Singleton"
 CoinSystem.Inject = {
-	PlayerComponent = "PlayerComponent",
-	DataComponent = "DataComponent",
     WorldService = "WorldService",
 	BindableComponent = "BindableComponent",
 	ComponentFabric = "ComponentFabric",
 }
 
 export type Main = {
-	PlayerComponent: PlayerComponentInterface.IPlayerComponent,
-	DataComponent: DataComponentInterface.IDataComponent,
 	BindableComponent: BindableInterfaces.IBindableComponent,
     WorldService: WorldServiceInterface.IWorldService,
 	ComponentFabric: ComponentFabricInterface.IComponentFabric,
@@ -41,11 +37,11 @@ function CoinSystem:Init()
 
 	local world = self.WorldService.World
 	
-	self.BindableComponent:Connect("PlayerLoaded", function(payload: {Entity: JecsInterfaces.Entity})
-		local profileLinkEntity = world:get(payload.Entity, self.PlayerComponent.ProfileLink)
-		assert(profileLinkEntity, 'profile link doesnt exist!')
+	self.BindableComponent:Connect("Player.Loaded", function(payload: {Entity: JecsInterfaces.Entity})
+		local profile = world:target(payload.Entity, self.ComponentFabric.Components.Data.ProfileLink, 0)
+		assert(profile, 'profile link doesnt exist!')
 
-		print(world:get(profileLinkEntity, self.DataComponent.Data))
+		print(world:get(profile, self.ComponentFabric.Components.Data.Data))
 	end)
 end
 

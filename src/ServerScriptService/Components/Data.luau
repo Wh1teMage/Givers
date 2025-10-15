@@ -13,5 +13,6 @@ export type Data = JecsInterfaces.Entity<DataType>
 export type Values = JecsInterfaces.Entity<ValuesType>
 export type Multipliers = JecsInterfaces.Entity<MultipliersType>
 export type Inventory = JecsInterfaces.Entity<InventoryType>
+export type ProfileLink = JecsInterfaces.Entity<>
 
-return {'Data', 'Values', 'Multipliers', 'Inventory'}
+return {'Data', 'Values', 'Multipliers', 'Inventory', 'ProfileLink'}

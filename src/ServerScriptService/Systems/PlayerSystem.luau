@@ -27,12 +27,12 @@ function PlayerSystem.new()
 	return self
 end
 
-function PlayerSystem:Init()
+function PlayerSystem:Init()	
 	self = self :: Main
 
-	self.BindableComponent:Connect("PlayerAdded", function(payload: {Player: Player})
+	self.BindableComponent:Connect("Player.Added", function(payload: {Player: Player})
 		local entity = self.PlayerFabric:CreatePlayer(payload.Player)
-		self.BindableComponent:Fire("PlayerLoaded", { Entity = entity })
+		self.BindableComponent:Fire("Player.Loaded", { Entity = entity })
 	end)
 end
 

@@ -8,6 +8,7 @@ local profilestore = require(ServerScriptService.ServerPackages.profilestore)
 
 local DataComponentInterface = require(Interfaces:WaitForChild("DataComponentInterface"))
 local WorldServiceInterface = require(Interfaces:WaitForChild("WorldServiceInterface"))
+local ComponentFabricInterface = require(Interfaces:WaitForChild("ComponentFabricInterface"))
 
 --Templates
 local ProfileTemplate = require(ReplicatedStorage.Templates:WaitForChild("DataProfile"))
@@ -18,25 +19,14 @@ local DATA_SCOPE = "Main"
 
 DataFabric.Scope = "Singleton"
 DataFabric.Inject = {
-	DataComponent = "DataComponent",
+	ComponentFabric = "ComponentFabric",
 	WorldService = "WorldService",
 	profilestore = "ProfileStore",
 	Jecs = "Jecs",
 }
 
-local function test(world)
-	return {
-		Passive = world:component("Passive"),
-		Health = world:component("Health"),
-		Mana = world:component("Mana"),
-		AbilityRequest = world:component("AbilityRequest"),
-		Cooldown = world:component("Cooldown"),
-	}
-end
-
-
 export type Main = {
-	DataComponent: DataComponentInterface.IDataComponent,
+	ComponentFabric: ComponentFabricInterface.IComponentFabric,
 	WorldService: WorldServiceInterface.IWorldService,
 	Jecs: typeof(PackagesInterfaces.Jecs),
 	profilestore: typeof(profilestore),
@@ -68,11 +58,11 @@ function DataFabric:LoadProfile(id: number)
 	profile:AddUserId(id)
 	profile:Reconcile()
 
-	world:set(entity, self.DataComponent.Data, profile.Data)
+	world:set(entity, self.ComponentFabric.Components.Data.Data, profile.Data)
 
-	world:set(entity, self.DataComponent.Values, profile.Data.Values)
-	world:set(entity, self.DataComponent.Inventory, profile.Data.Inventory)
-	world:set(entity, self.DataComponent.Multipliers, profile.Data.Multipliers)
+	world:set(entity, self.ComponentFabric.Components.Data.Values, profile.Data.Values)
+	world:set(entity, self.ComponentFabric.Components.Data.Inventory, profile.Data.Inventory)
+	world:set(entity, self.ComponentFabric.Components.Data.Multipliers, profile.Data.Multipliers)
 
 	print(`{id} profile was loaded {profile}`)
 

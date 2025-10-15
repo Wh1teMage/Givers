@@ -6,17 +6,19 @@ local Interfaces = ServerScriptService.GeneratedInterfaces
 local PackagesInterfaces = require(ReplicatedStorage.Interfaces.PackagesInterfaces)
 
 local WorldServiceInterface = require(Interfaces:WaitForChild("WorldServiceInterface"))
+local ComponentFabricInterface = require(Interfaces:WaitForChild("ComponentFabricInterface"))
 
 local PassiveFabric = {}
 
 PassiveFabric.Scope = "Singleton"
 PassiveFabric.Inject = {
-	PassiveComponent = "PassiveComponent",
+	ComponentFabric = "ComponentFabric",
 	WorldService = "WorldService",
 	Jecs = "Jecs",
 }
 
 export type Main = {
+	ComponentFabric: ComponentFabricInterface.IComponentFabric,
 	WorldService: WorldServiceInterface.IWorldService,
 	Jecs: typeof(PackagesInterfaces.Jecs),
 } & typeof(PassiveFabric)
@@ -27,6 +29,8 @@ function PassiveFabric.new()
 end
 
 function PassiveFabric:CreatePassive(Type: string, Name: string, Level: number)
+	self = self :: Main
+
 	local world = self.WorldService.World
 	local entity = world:entity()
 
@@ -36,9 +40,8 @@ function PassiveFabric:CreatePassive(Type: string, Name: string, Level: number)
 		Level = Level,
 	}
 
-	world:set(entity, self.PassiveComponent.Data, Data)
-
-	world:add(entity, self.PassiveComponent.Passive)
+	world:set(entity, self.ComponentFabric.Components.Passive.Data, Data)
+	world:add(entity, self.ComponentFabric.Components.Passive.Passive)
 
 	return entity
 end

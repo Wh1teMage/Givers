@@ -19,11 +19,15 @@ AbilityValidationSystem.Inject = {
     WorldService = "WorldService"
 }
 
-export type Main = {
+export type Main = typeof(AbilityValidationSystem)
+
+type Dependencies = {
 	BindableComponent: BindableInterfaces.IBindableComponent,
 	ComponentFabric: ComponentFabricInterface.IComponentFabric,
     WorldService: WorldServiceInterface.IWorldService,
-} & typeof(AbilityValidationSystem)
+}
+
+type self = Dependencies & Main
 
 function AbilityValidationSystem.new()
 	local self = setmetatable({}, AbilityValidationSystem)
@@ -31,14 +35,20 @@ function AbilityValidationSystem.new()
 end
 
 function AbilityValidationSystem:Init()
-	self = self :: Main
+	self = self :: self
     local world = self.WorldService.World
 	
-	self.BindableComponent:Connect("Ability.OnCreateRequest", function(payload: {Entity: JecsInterfaces.Entity})
-		local requestData = world:get(payload.Entity, self.ComponentFabric.Components.Ability.Ability)
+	self.BindableComponent:Connect("Ability.CreateRequest", function(payload: {Entity: JecsInterfaces.Entity})
+		local requestData = world:get(payload.Entity, self.ComponentFabric.Components.Ability.Request)
 		assert(requestData, 'request data doesnt exist!')
 
-        self.BindableComponent:Fire("Ability.OnCreate", payload) -- trasnferring params
+		world:remove(payload.Entity, self.ComponentFabric.Components.Ability.Request)
+
+		-- make abilityfabric createability here
+
+		world:add(payload.Entity, self.ComponentFabric.Components.Ability.RequestValid)
+
+        --self.BindableComponent:Fire("Ability.Create", payload) -- trasnferring params
 
         --instead of this do query
 	end)
