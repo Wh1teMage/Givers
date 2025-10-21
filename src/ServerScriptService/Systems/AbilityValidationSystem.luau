@@ -37,7 +37,7 @@ end
 function AbilityValidationSystem:Init()
 	self = self :: self
     local world = self.WorldService.World
-	
+	--[[
 	self.BindableComponent:Connect("Ability.CreateRequest", function(payload: {Entity: JecsInterfaces.Entity})
 		local requestData = world:get(payload.Entity, self.ComponentFabric.Components.Ability.Request)
 		assert(requestData, 'request data doesnt exist!')
@@ -51,7 +51,7 @@ function AbilityValidationSystem:Init()
         --self.BindableComponent:Fire("Ability.Create", payload) -- trasnferring params
 
         --instead of this do query
-	end)
+	end)]]
 end
 
 return AbilityValidationSystem

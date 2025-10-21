@@ -6,7 +6,6 @@ local Interfaces = ServerScriptService.GeneratedInterfaces
 local PackagesInterfaces = require(ReplicatedStorage.Interfaces.PackagesInterfaces)
 local profilestore = require(ServerScriptService.ServerPackages.profilestore)
 
-local DataComponentInterface = require(Interfaces:WaitForChild("DataComponentInterface"))
 local WorldServiceInterface = require(Interfaces:WaitForChild("WorldServiceInterface"))
 local ComponentFabricInterface = require(Interfaces:WaitForChild("ComponentFabricInterface"))
 

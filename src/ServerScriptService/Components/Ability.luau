@@ -1,19 +1,19 @@
 local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
 
 type AbilityData = {
-    id: string,
-    cooldown: number,
+    name: string,
+    tags: {string},
+    behaviors: {[string]: {trigger: string, args: {[string]: any}}},
+    validations: {[string]: {trigger: string, args: {[string]: any}}},
 }
 
-type RequestData = {
-    id: string
+type AbilityStatus = {
+    scope: string,
+    entity: JecsInterfaces.Entity<>
 }
 
 export type Data = JecsInterfaces.Entity<AbilityData>
-export type Request = JecsInterfaces.Entity<RequestData>
-export type OwnsAbility = JecsInterfaces.Entity<>
+export type StatusData = JecsInterfaces.Entity<AbilityStatus>
+export type HasAbility = JecsInterfaces.Entity<>
 
-export type RequestValid = JecsInterfaces.Entity<>
-export type CreationInProcess = JecsInterfaces.Entity<>
-
-return {'Data', 'OwnsAbility', 'Request', 'RequestValid', 'CreationInProcess'}
+return {'Data', 'HasAbility', 'StatusData'}

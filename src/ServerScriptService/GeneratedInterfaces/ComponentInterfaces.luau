@@ -11,10 +11,8 @@ local PassiveComponent = require(game.ServerScriptService.Components.Passive)
 export type Components = {
 	Ability: {
 	Data: AbilityComponent.Data,
-	Request: AbilityComponent.Request,
-	OwnsAbility: AbilityComponent.OwnsAbility,
-	RequestValid: AbilityComponent.RequestValid,
-	CreationInProcess: AbilityComponent.CreationInProcess,
+	StatusData: AbilityComponent.StatusData,
+	HasAbility: AbilityComponent.HasAbility,
 },
 	Player: {
 	PlayerInstance: PlayerComponent.PlayerInstance,

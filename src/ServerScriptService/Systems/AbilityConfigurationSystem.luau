@@ -51,6 +51,9 @@ function AbilityConfigurationSystem:Update()
 	self = self :: self
     local world = self.WorldService.World
 
+    --local data = world:get(world:entity(), self.ComponentFabric.Components.Ability.Data)
+
+    --[[
     for entity in world:query(self.ComponentFabric.Components.Ability.RequestValid) do
         world:remove(entity, self.ComponentFabric.Components.Ability.RequestValid)
         world:add(entity, self.ComponentFabric.Components.Ability.CreationInProcess)
@@ -70,9 +73,9 @@ function AbilityConfigurationSystem:Update()
         how to handle states like reqValid, creationInProcess correctly (flags/enums/etc)
         how to process behaviours
 
-        ]]
+        
     end
-
+    ]]
 end
 
 return AbilityConfigurationSystem
