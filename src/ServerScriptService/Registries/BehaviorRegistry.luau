@@ -15,7 +15,7 @@ BehaviorRegistry.Inject = {
 --great language moment
 local Components: ComponentInterfaces.Components;
 export type Main = typeof(BehaviorRegistry) & RegistryHelperInterface.IRegistryHelper<
-(JecsInterfaces.World, typeof(Components.Ability.Data.__T.behaviors['test'].args), JecsInterfaces.Entity) -> ...any
+(typeof(Components.Ability.Data.__T.behaviors['test'].args), JecsInterfaces.Entity) -> ...any
 >
 
 type Dependencies = {

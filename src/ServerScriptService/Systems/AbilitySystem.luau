@@ -65,13 +65,13 @@ function AbilitySystem:ProcessRequest(entity: JecsInterfaces.Entity)
     for name, validation in pairs(data.validations) do
         if (validation.trigger ~= requestData.scope) then continue end
         local validationFunction = self.ValidationRegistry:Get(name)
-        if (not validationFunction(world, validation.args, abilityEntity)) then return end
+        if (not validationFunction(validation.args, abilityEntity)) then return end
     end
 
     for name, behavior in pairs(data.behaviors) do
         if (behavior.trigger ~= requestData.scope) then continue end
         local behaviorFunction = self.BehaviorRegistry:Get(name)
-        behaviorFunction(world, behavior.args, abilityEntity)
+        behaviorFunction(behavior.args, abilityEntity)
     end
 end
 

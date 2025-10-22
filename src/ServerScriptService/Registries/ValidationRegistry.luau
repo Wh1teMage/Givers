@@ -15,7 +15,7 @@ ValidationRegistry.Inject = {
 --great language moment
 local Components: ComponentInterfaces.Components;
 export type Main = typeof(ValidationRegistry) & RegistryHelperInterface.IRegistryHelper<
-(JecsInterfaces.World, typeof(Components.Ability.Data.__T.validations['test'].args), JecsInterfaces.Entity) -> boolean
+(typeof(Components.Ability.Data.__T.validations['test'].args), JecsInterfaces.Entity) -> boolean
 >
 
 type Dependencies = {
