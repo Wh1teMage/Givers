@@ -5,8 +5,6 @@ local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
 local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
-local PlayerComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.PlayerComponentInterface)
-local DataComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.DataComponentInterface)
 local ComponentFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.ComponentFabricInterface)
 
 local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
