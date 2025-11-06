@@ -2,7 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local Interfaces = ServerScriptService.GeneratedInterfaces
-local Components = ServerScriptService.ComponentsTest
+local Components = ServerScriptService.Components
 
 local PackagesInterfaces = require(ReplicatedStorage.Interfaces.PackagesInterfaces)
 local profilestore = require(ServerScriptService.ServerPackages.profilestore)
