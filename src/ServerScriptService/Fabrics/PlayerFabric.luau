@@ -5,7 +5,6 @@ local Interfaces = ServerScriptService.GeneratedInterfaces
 
 local DataFabricInterface = require(Interfaces.DataFabricInterface)
 local WorldServiceInterface = require(Interfaces.WorldServiceInterface)
-local PlayerComponentInterface = require(Interfaces.PlayerComponentInterface)
 local ComponentFabricInterface = require(Interfaces.ComponentFabricInterface)
 
 local PackagesInterfaces = require(ReplicatedStorage.Interfaces.PackagesInterfaces)

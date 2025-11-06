@@ -2,7 +2,6 @@
 local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
 
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
-local BindableComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 
 
 type Dependencies = {
@@ -13,24 +12,13 @@ type Arguments = {
     ['test']: string,
 }
 
-type Context = {
-    eventBus: BindableComponentInterface.IBindableComponent,
-    entity: JecsInterfaces.Entity
-}
-
---[[
-
-Context should be in a separate interface
-try to create one entry point for interfaces instead of tons of requires
-
-]]
-
 local behavior = {
     Inject = { 'WorldService' },
     Factory = function(deps: Dependencies)
-        return function(args: Arguments, context: Context)
+        return function(args: Arguments, entity: JecsInterfaces.Entity)
             local world = deps.WorldService.World
 
+            print(args.test)
         end
     end,
 }

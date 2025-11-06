@@ -1,6 +1,8 @@
 --!strict
+local BindableComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 local RegistryHelperInterface = require(game.ServerScriptService.GeneratedInterfaces.RegistryHelperInterface)
 local ComponentInterfaces = require(game.ServerScriptService.GeneratedInterfaces.ComponentInterfaces)
+
 
 local JecsInterfaces = require(game.ReplicatedStorage.Interfaces.JecsInterfaces)
 
@@ -12,10 +14,15 @@ BehaviorRegistry.Inject = {
     'RegistryHelper'
 }
 
+type context = {
+    entity: JecsInterfaces.Entity,
+    eventBus: BindableComponentInterface.IBindableComponent,
+}
+
 --great language moment
 local Components: ComponentInterfaces.Components;
 export type Main = typeof(BehaviorRegistry) & RegistryHelperInterface.IRegistryHelper<
-(typeof(Components.Ability.Data.__T.behaviors['test'].args), JecsInterfaces.Entity) -> ...any
+(typeof(Components.Ability.Data.__T.behaviors['test'].args), context) -> ...any
 >
 
 type Dependencies = {

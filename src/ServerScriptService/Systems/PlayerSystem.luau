@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
+local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
 
 local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
 local PlayerFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.PlayerFabricInterface)
@@ -14,12 +14,12 @@ PlayerSystem.__index = PlayerSystem
 PlayerSystem.Scope = "Singleton"
 PlayerSystem.Inject = {
 	PlayerFabric = "PlayerFabric",
-	BindableComponent = "BindableComponent",
+	WorldService = "WorldService",
 }
 
 export type Main = {
 	PlayerFabric: PlayerFabricInterface.IPlayerFabric,
-	BindableComponent: BindableInterfaces.IBindableComponent,
+	WorldService: WorldServiceInterface.IWorldService,
 } & typeof(PlayerSystem)
 
 function PlayerSystem.new()
@@ -30,9 +30,9 @@ end
 function PlayerSystem:Init()	
 	self = self :: Main
 
-	self.BindableComponent:Connect("Player.Added", function(payload: {Player: Player})
+	self.WorldService.EventBus:Connect("Player.Added", function(payload: {Player: Player})
 		local entity = self.PlayerFabric:CreatePlayer(payload.Player)
-		self.BindableComponent:Fire("Player.Loaded", { Entity = entity })
+		self.WorldService.EventBus:Fire("Player.Loaded", { Entity = entity })
 	end)
 end
 

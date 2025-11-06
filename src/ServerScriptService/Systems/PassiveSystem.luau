@@ -7,7 +7,6 @@ local ServerStorage = game:GetService("ServerStorage")
 local Interfaces = ServerScriptService:WaitForChild("GeneratedInterfaces")
 local RInterfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(Interfaces.BindableComponentInterface)
 local PassiveInterfaces = require(Interfaces:WaitForChild("PassiveFabricInterface"))
 local WorldServiceInterface = require(Interfaces.WorldServiceInterface)
 
@@ -17,13 +16,11 @@ PassiveSystem.__index = PassiveSystem
 PassiveSystem.Scope = "Singleton"
 PassiveSystem.Inject = {
 	WorldService = "WorldService",
-	BindableComponent = "BindableComponent",
 	PassiveFabric = "PassiveFabric",
 }
 
 export type Main = {
 	WorldService: WorldServiceInterface.IWorldService,
-	BindableComponent: BindableInterfaces.IBindableComponent,
 	PassiveFabric: PassiveInterfaces.IPassiveFabric,
 } & typeof(PassiveSystem)
 

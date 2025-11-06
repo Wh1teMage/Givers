@@ -1,7 +1,7 @@
 -- PlayerService.luau
 --!strict
 local ContainerInterface = require(game.ServerScriptService.GeneratedInterfaces.ContainerInterface)
-local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
+local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
 
 local Players = game:GetService("Players")
 
@@ -11,11 +11,11 @@ PlayerService.__index = PlayerService
 PlayerService.Scope = "Singleton"
 PlayerService.Inject = {
 	Container = "Container",
-	BindableComponent = "BindableComponent"
+	WorldService = "WorldService"
 }
 
 export type Main = { 
-	BindableComponent: BindableInterfaces.IBindableComponent,
+	WorldService: WorldServiceInterface.IWorldService,
     Container: ContainerInterface.IContainer,
 } & typeof(PlayerService)
 
@@ -27,21 +27,13 @@ end
 function PlayerService:Init()
 	self = self :: Main
 
-	print(self.BindableComponent)
-
-	self.BindableComponent:Wait("PlayerAdded", 60):andThen(function(test)
+	self.WorldService.EventBus:Wait("PlayerAdded", 60):andThen(function(test)
 		print('ello', test)
 	end)
 
 	Players.PlayerAdded:Connect(function(player)
-		self.BindableComponent:Fire('PlayerAdded', {Player = player})
+		self.WorldService.EventBus:Fire('PlayerAdded', {Player = player})
 	end)
-
-	--[[
-	self.BindableComponent:Wait('PlayerAdded', function(...)
-		print(...)
-	end)
-	]]
 
 	print("[PlayerService] initialized")
 end

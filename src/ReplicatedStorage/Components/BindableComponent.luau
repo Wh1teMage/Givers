@@ -9,14 +9,12 @@ local PackagesInterfaces = require(Interfaces.PackagesInterfaces)
 
 local BindableComponent = {}
 
-BindableComponent.Scope = 'Singleton'
+BindableComponent.Scope = 'Prototype'
 BindableComponent.Inject = {
 	Promise = 'Promise',
 }
 
-local Methods = {}
-
-export type Main = typeof(Methods) & {
+export type Main = typeof(BindableComponent) & {
 	connections: {},
 	onceConnections: {},
 	middlewares: {},
@@ -29,12 +27,12 @@ function BindableComponent.new()
 		connections = {},
 		onceConnections = {},
 		middlewares = {},
-	}, {__index = Methods})
+	}, {})
 
 	return component
 end
 
-function Methods:Connect(name: string, callback: ({[string]: any}) -> ())
+function BindableComponent:Connect(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	if not self.connections[name] then
@@ -44,20 +42,20 @@ function Methods:Connect(name: string, callback: ({[string]: any}) -> ())
 	table.insert(self.connections[name], callback)
 end
 
-function Methods:GetConnection(name: string, scope: string)
+function BindableComponent:GetConnection(name: string, scope: string)
 	if not self[scope][name] then
 		return
 	end
 	return self[scope][name]
 end
 
-function Methods:GetConnections(name: string): { ({[string]: any}) -> () }
+function BindableComponent:GetConnections(name: string): { ({[string]: any}) -> () }
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	return self.connections[name]
 end
 
-function Methods:Once(name: string, callback: ({[string]: any}) -> ())
+function BindableComponent:Once(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	self.onceConnections[name] = function(...)
@@ -68,7 +66,7 @@ function Methods:Once(name: string, callback: ({[string]: any}) -> ())
 	
 end
 
-function Methods:Wait(name: string, timeout: number?)
+function BindableComponent:Wait(name: string, timeout: number?)
 	self = self :: Main
 
 	if (not timeout) then timeout = 5 end
@@ -100,7 +98,7 @@ function Methods:Wait(name: string, timeout: number?)
 	return promise
 end
 
-function Methods:DisconnectAll()
+function BindableComponent:DisconnectAll()
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	for name, connect in pairs(self.connections) do
@@ -117,7 +115,7 @@ function Methods:DisconnectAll()
 	end
 end
 
-function Methods:Destroy()
+function BindableComponent:Destroy()
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	self:DisconnectAll()
@@ -130,12 +128,12 @@ function Methods:Destroy()
 	setmetatable(self, nil)
 end
 
-function Methods:AddMiddleware(name: string, callback: ({[string]: any}) -> ())
+function BindableComponent:AddMiddleware(name: string, callback: ({[string]: any}) -> ())
 	self = self --:: BindableInterfaces.IBindableComponent
 	self.middlewares[name] = callback
 end
 
-function Methods:Fire(eventName: string, payload: {[string]: any})
+function BindableComponent:Fire(eventName: string, payload: {[string]: any})
 	self = self --:: BindableInterfaces.IBindableComponent
 
 	assert(self.connections[eventName], `{eventName} doent exist`)

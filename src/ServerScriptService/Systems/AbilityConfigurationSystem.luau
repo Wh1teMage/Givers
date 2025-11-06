@@ -5,7 +5,6 @@ local RunService = game:GetService("RunService")
 
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 local ComponentFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.ComponentFabricInterface)
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
 
@@ -16,7 +15,6 @@ AbilityConfigurationSystem.__index = AbilityConfigurationSystem
 
 AbilityConfigurationSystem.Scope = "Singleton"
 AbilityConfigurationSystem.Inject = {
-	BindableComponent = "BindableComponent",
 	ComponentFabric = "ComponentFabric",
     WorldService = "WorldService"
 }
@@ -24,7 +22,6 @@ AbilityConfigurationSystem.Inject = {
 export type Main = typeof(AbilityConfigurationSystem)
 
 type Dependencies = {
-	BindableComponent: BindableInterfaces.IBindableComponent,
 	ComponentFabric: ComponentFabricInterface.IComponentFabric,
     WorldService: WorldServiceInterface.IWorldService,
 }

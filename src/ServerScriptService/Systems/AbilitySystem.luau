@@ -5,9 +5,10 @@ local RunService = game:GetService("RunService")
 
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 local ComponentFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.ComponentFabricInterface)
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
+local BindableComponentInterface = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
+
 
 local ValidationRegistryInterface = require(game.ServerScriptService.GeneratedInterfaces.ValidationRegistryInterface)
 local BehaviorRegistryInterface = require(game.ServerScriptService.GeneratedInterfaces.BehaviorRegistryInterface)
@@ -19,9 +20,9 @@ AbilitySystem.__index = AbilitySystem
 
 AbilitySystem.Scope = "Singleton"
 AbilitySystem.Inject = {
+    BindableComponent = 'BindableComponent',
     BehaviorRegistry = "BehaviorRegistry",
     ValidationRegistry = "ValidationRegistry",
-	BindableComponent = "BindableComponent",
 	ComponentFabric = "ComponentFabric",
     WorldService = "WorldService"
 }
@@ -29,9 +30,9 @@ AbilitySystem.Inject = {
 export type Main = typeof(AbilitySystem)
 
 type Dependencies = {
+    BindableComponent: BindableComponentInterface.IBindableComponent,
     BehaviorRegistry: BehaviorRegistryInterface.IBehaviorRegistry,
     ValidationRegistry: ValidationRegistryInterface.IValidationRegistry,
-	BindableComponent: BindableInterfaces.IBindableComponent,
 	ComponentFabric: ComponentFabricInterface.IComponentFabric,
     WorldService: WorldServiceInterface.IWorldService,
 }
@@ -58,6 +59,10 @@ function AbilitySystem:ProcessRequest(entity: JecsInterfaces.Entity)
     assert(requestData, `{entity} request data doesnt exist!`)
 
     local abilityEntity = requestData.entity
+    local context = {
+        entity = abilityEntity,
+        eventBus = self.BindableComponent.new()
+    }
 
     local data = world:get(abilityEntity, self.ComponentFabric.Components.Ability.Data)
     assert(data, `{requestData.entity} ability data doesnt exist!`)
@@ -71,7 +76,7 @@ function AbilitySystem:ProcessRequest(entity: JecsInterfaces.Entity)
     for name, behavior in pairs(data.behaviors) do
         if (behavior.trigger ~= requestData.scope) then continue end
         local behaviorFunction = self.BehaviorRegistry:Get(name)
-        behaviorFunction(behavior.args, abilityEntity)
+        behaviorFunction(behavior.args, context :: any)
     end
 end
 

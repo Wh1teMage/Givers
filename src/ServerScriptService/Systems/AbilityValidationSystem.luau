@@ -3,7 +3,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interfaces = ReplicatedStorage:WaitForChild("Interfaces")
 
-local BindableInterfaces = require(game.ServerScriptService.GeneratedInterfaces.BindableComponentInterface)
 local ComponentFabricInterface = require(game.ServerScriptService.GeneratedInterfaces.ComponentFabricInterface)
 local WorldServiceInterface = require(game.ServerScriptService.GeneratedInterfaces.WorldServiceInterface)
 
@@ -14,7 +13,6 @@ AbilityValidationSystem.__index = AbilityValidationSystem
 
 AbilityValidationSystem.Scope = "Singleton"
 AbilityValidationSystem.Inject = {
-	BindableComponent = "BindableComponent",
 	ComponentFabric = "ComponentFabric",
     WorldService = "WorldService"
 }
@@ -22,7 +20,6 @@ AbilityValidationSystem.Inject = {
 export type Main = typeof(AbilityValidationSystem)
 
 type Dependencies = {
-	BindableComponent: BindableInterfaces.IBindableComponent,
 	ComponentFabric: ComponentFabricInterface.IComponentFabric,
     WorldService: WorldServiceInterface.IWorldService,
 }
