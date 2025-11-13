@@ -4,7 +4,7 @@ description = "Main codebase for Givers"
 license = "MIT"
 
 [target]
-environment = "roblox"
+environment = "lune"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
