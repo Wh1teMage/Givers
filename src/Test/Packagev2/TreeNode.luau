@@ -38,15 +38,20 @@ end
 -- Интерфейс для Registry: методы через typeof, поля типизированы вручную
 export type IRegistry = {callbacks: { [string]: (...any) -> any }} & typeof(Registry)
 
+local nodeCount = 0 --! come up with a better solution
+
 local TreeNode = {}
 TreeNode.__index = TreeNode
 
 function TreeNode.new(config: any)
     local self = setmetatable({
-        Id = (config and config.id) or 1,
+        Id = nodeCount,
+        Tag = (config and config.tag) or nil,
         Type = (config and config.type) or nil,
         Name = (config and config.name) or nil,
         Config = config.config or {},
+        RequestedTags = (config and config.requestedTags or {}),
+        Additional = {},
         Children = (config and config.children) or {},
         Parent = nil,
     }, TreeNode)
@@ -56,6 +61,8 @@ function TreeNode.new(config: any)
         if (not child) then continue end
         child.Parent = self
     end
+
+    nodeCount += 1
 
     return self
 end
@@ -100,6 +107,7 @@ function Parser.new()
     local self = setmetatable({
         ScopeRegistry = Registry.new(),
         Events = {},
+        Tags = {},
         Tree = nil,
     }, Parser)
 
@@ -135,16 +143,37 @@ function AbilityParser.new()
     return self
 end
 
+--[[
+
+local test = {
+    Name = 'Event.OnHit',
+    Tag = 'OnHit12321',
+    Children = {
+        {
+            Name = 'Action.Hello',
+            RequiredTags = {'OnHit12321.OnHit'},
+            Config = {
+                test = 123,
+            }
+        },
+    }
+}
+
+]]
+
 -- Transfer an ability definition (data-driven) into TreeNode instances.
 -- Intended for converting ability.behaviors sequences into a node tree.
-function AbilityParser:TransferIntoNodes(structure: any, name: string?)
+function AbilityParser:TransferIntoNodes(structure: any)
     local children = {}
-    if (not name) then name = 'Default' end
     
-    local splitted = string.split(name :: string, '.')
+    local splitted = string.split(structure.Name :: string, '.')
     if (#splitted < 2) then return end
 
-    for key, child in pairs(structure) do
+    if (not structure.Children) then
+        structure.Children = {}
+    end
+
+    for key, child in pairs(structure.Children) do
         local childNode = self:TransferIntoNodes(child, key)
         table.insert(children, childNode)
     end
@@ -154,13 +183,15 @@ function AbilityParser:TransferIntoNodes(structure: any, name: string?)
         name = splitted[2],
         children = children,
         config = structure.Config,
+        tag = structure.Tag,
+        requestedTags = structure.RequestedTags
     })
 
     return rootNode
 end
 
 function AbilityParser:Create(structure: any)
-    self.Tree = self:TransferIntoNodes(structure, 'Action.Root')
+    self.Tree = self:TransferIntoNodes(structure)
     self.Context = self.Tree.Config
 
     return self

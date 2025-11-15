@@ -3,10 +3,19 @@ local test = require('./Packagev2/TreeNode')
 local scopeRegistry = test.Registry.new()
 
 scopeRegistry:Register('Action', function(self, node) 
+
+    for key, tag in pairs(node.RequestedTags or {}) do
+        --print(key, tag, self.Tags)
+        node.Additional[key] = self.Tags[tag] or {}
+    end
+
     local behavior = self.BehaviorRegistry:Get(node.Name)
     if (behavior) then behavior(self, node) end
-    
-    for _, child in node.Children do
+    if (node.Tag) then self.Tags[node.Tag] = node.Config end
+
+    print(node.Name, self.Tags)
+
+    for _, child in (node.Children or {}) do
         --print(node.Children[child])
         self:Parse(child)
     end
@@ -15,41 +24,39 @@ end)
 scopeRegistry:Register('Event', function(self, node) 
     --local behavior = self.BehaviorRegistry:Get(node.Name)
     --if (behavior) then behavior(self, node) end
-
-    self.Events[node.Name] = node
-end)
-
-scopeRegistry:Register('TriggerEvent', function(self, node)
-
+    if (self.Events[node.Tag]) then warn(node.Tag..' already exists!'); return end
+    self.Events[node.Tag] = node
 end)
 
 local behaviorRegistry = test.Registry.new()
 
-behaviorRegistry:Register('Root', function(self, node)  
+behaviorRegistry:Register('TriggerEvent', function(self, node)  
+    if (not self.Events) then return end
+    local handler = self.ScopeRegistry:Get('Action')
+
+    local selectedBlock = self.Events[node.Config.TagName]
+    selectedBlock.TriggerArgs = node.Config
+    self.Tags[node.Config.TagName] = node.Config
+
+    --print(node.Config.TagName, self.Tags)
+
+    if handler then handler(self, selectedBlock) end
+end)
+
+behaviorRegistry:Register('OnHit', function(self, node) 
+    --print(self.Tags) 
     --print('root created', self)
 end)
 
 behaviorRegistry:Register('Test', function(self, node)  
-    --print('root created', self)
+    --print(self.Tags)
 end)
 
-behaviorRegistry:Register('Hello', function(self, node)  
-    print('hello', node.Config)
+behaviorRegistry:Register('Hello', function(self, node)
+    --print(node.Additional['OnHit'])
+    --print('hello', node.Config)
 end)
 
-behaviorRegistry:Register('Fire', function(self, node)  
-    if (not self.Events) then return end
-    local handler = self.ScopeRegistry:Get('Action')
-
-    local selectedBlock = self.Events[node.Config.EventName]
-    selectedBlock.Config.EventData = node.Config
-
-    for _, child in selectedBlock.Children do
-        child.Config.EventData = node.Config
-    end
-
-    if handler then handler(self, selectedBlock) end
-end)
 
 
 local parser = test.AbilityParser.new()
@@ -57,13 +64,23 @@ parser.BehaviorRegistry = behaviorRegistry
 parser.ScopeRegistry = scopeRegistry
 
 local ability = parser:Create({
-
-    ['Event.Test'] = {
-        ['Action.Hello'] = {
+    Name = 'Event.OnHit',
+    Tag = 'OnHit12321',
+    Children = {
+        {
+            Name = 'Action.Hello',
+            Tag = 'Test',
+            RequestedTags = {['OnHit'] = 'OnHit12321'},
             Config = {
-                test = 1123
+                test = 123,
+            },
+            Children = {
+                {
+                    Name = 'Action.Test',
+                    RequestedTags = {['OnHit'] = 'OnHit12321', ['Parent'] = 'Test'},
+                }
             }
-        }
+        },
     }
 })
 
@@ -71,36 +88,20 @@ ability:Build()
 
 ability:Parse(
     {
-        Name = 'Fire',
-        Type = 'Event',
+        Type = 'Action',
+        Name = 'TriggerEvent',
         Config = {
-            EventName = 'Test',
-            tst = 1234,
+            test = 123,
+            TagName = 'OnHit12321'
         }
     }
 )
 
-local test = {
-    Name = 'Event.OnHit',
-    id = 123, -- unique key
-    Tag = '@main',
-    Children = {
-        {
-            Name = 'Action.Hello',
-            RequiredTags = {'@main'},
+-- TreeNode + entryPoint
+--[[
+self.Additional['OnHit'] = self.Tags['OnHit12321']
 
-            Config = {
-                test = 123,
-            }
-
-
-        },
-        {
-            Name = 'Event.OnHit',
-            Tag = '@main',
-        }
-    }
-}
+]]
 
 
 --[[
