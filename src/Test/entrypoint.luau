@@ -13,10 +13,14 @@ scopeRegistry:Register('Action', function(self, node)
 end)
 
 scopeRegistry:Register('Event', function(self, node) 
-    local behavior = self.BehaviorRegistry:Get(node.Name)
-    if (behavior) then behavior(self, node) end
+    --local behavior = self.BehaviorRegistry:Get(node.Name)
+    --if (behavior) then behavior(self, node) end
 
     self.Events[node.Name] = node
+end)
+
+scopeRegistry:Register('TriggerEvent', function(self, node)
+
 end)
 
 local behaviorRegistry = test.Registry.new()
@@ -75,6 +79,75 @@ ability:Parse(
         }
     }
 )
+
+local test = {
+    Name = 'Event.OnHit',
+    id = 123, -- unique key
+    Tag = '@main',
+    Children = {
+        {
+            Name = 'Action.Hello',
+            RequiredTags = {'@main'},
+
+            Config = {
+                test = 123,
+            }
+
+
+        },
+        {
+            Name = 'Event.OnHit',
+            Tag = '@main',
+        }
+    }
+}
+
+
+--[[
+Event.OnHit is registered 2 times
+solution: table insert
+fireball
+
+table insert makes it so that we cant trigger a specific event 
+instead, we trigger all of the event with that specific name
+solution: Event.OnHit2
+
+we use a tag system, which leads to blocks
+reading parent values not by names but by tags
+E.x
+
+behaviorRegistry:Register('Root', function(self, node)  
+    self:GetTag('Damage') -> {
+        Damage = 10,
+        Type = 'test'
+    }
+end)
+
+{
+    Name = 'Event.Root',
+    Tag = 'Damage',
+}
+
+у нас 2 блока могут быть с одинаковыми тегами
+типо Damage
+
+в 1 части кода у нас Damage для fireball
+во 2 части кода - для fireballExplosion
+
+пусть у нас Fireball имеет возможность пробивать противников, 
+а взырвается только при соприкосновении с terrain
+
+тогда у нас урон и так и так сможет работать 
+(т.е OnHit будет триггерится в обоих случаях, но это разные ивенты)
+
+учитывай, что у Explosion тоже есть OnHit
+
+а как ты родителя будешь получать из блока? (по id)
+а можешь пример накидать?
+
+
+
+]]
 
 --ability:FireEvent('Test', {tst = 123})
 
