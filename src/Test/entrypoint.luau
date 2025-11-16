@@ -8,7 +8,7 @@ scopeRegistry:Register('Action', function(self, node)
     
     for _, child in node.Children do
         --print(node.Children[child])
-        self:Parse(child)
+        self:Execute(child)
     end
 end)
 
@@ -49,8 +49,17 @@ end)
 
 
 local parser = test.AbilityParser.new()
-parser.BehaviorRegistry = behaviorRegistry
+
+local behaviorRegistry2 = test.Registry.new():Clone(behaviorRegistry)
+
+behaviorRegistry2:Register('Root', function(...: any)  
+    print('New Root Behavior')
+end)
+
+parser.BehaviorRegistry = behaviorRegistry2
 parser.ScopeRegistry = scopeRegistry
+
+
 
 local ability = parser:Create({
 
@@ -65,7 +74,7 @@ local ability = parser:Create({
 
 ability:Build()
 
-ability:Parse(
+ability:Execute(
     {
         Name = 'Fire',
         Type = 'Event',

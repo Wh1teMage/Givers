@@ -28,11 +28,13 @@ function Registry:Get(name: string)
 end
 
 function Registry:Clone(registry)
-    local newRegistry = setmetatable(Registry.new(), {
-        __index = registry
-    }) 
+    setmetatable(self.callbacks, {
+        __index = function(t, i)
+            return registry.callbacks[i]
+        end
+    })
 
-    return newRegistry
+    return self
 end
 
 -- Интерфейс для Registry: методы через typeof, поля типизированы вручную
@@ -49,6 +51,7 @@ function TreeNode.new(config: any)
         Config = config.config or {},
         Children = (config and config.children) or {},
         Parent = nil,
+        InjectedCallback = (config and config.callback) or nil,
     }, TreeNode)
 
     -- ensure parent links for provided children
@@ -83,6 +86,11 @@ function TreeNode:GetRoot()
     return current
 end
 
+function TreeNode:Execute()
+    if (not self.InjectedCallback) then return end
+    self.InjectedCallback(self)
+end
+
 -- Рекурсивный тип узла и интерфейс
 export type TreeNodeT = {
     Id: number,
@@ -109,12 +117,18 @@ end
 -- Parse a nodes structure into internal representation.
 -- Base implementation: dispatch by node type using ScopeRegistry.
 -- Subclasses (AbilityParser, PassiveParser) can extend or override.
-function Parser:Parse(node: TreeNodeT)
+--[[
+function Parser:Execute(node: TreeNodeT)
     if (not node or not node.Type) then return end
 
     -- dispatch to scope handler if registered
     local handler = self.ScopeRegistry:Get(node.Type)
     if handler then handler(self, node) end
+end
+]]
+
+function Parser:TransferIntoNodes()
+    -- to be implemented by subclasses
 end
 
 -- Интерфейс Parser
@@ -128,9 +142,7 @@ setmetatable(AbilityParser, { __index = Parser })
 
 function AbilityParser.new()
     local self = setmetatable(Parser.new(), AbilityParser)
-
     self.BehaviorRegistry = Registry.new()
-    self.Context = nil
 
     return self
 end
@@ -154,20 +166,24 @@ function AbilityParser:TransferIntoNodes(structure: any, name: string?)
         name = splitted[2],
         children = children,
         config = structure.Config,
+        callback = self.ScopeRegistry:Get(splitted[1]),
     })
 
     return rootNode
 end
 
+function AbilityParser:Execute(structure: any)
+    local block = self:TransferIntoNodes(structure, 'Action.Root')
+    block.Execute(self, block)
+end
+
 function AbilityParser:Create(structure: any)
     self.Tree = self:TransferIntoNodes(structure, 'Action.Root')
-    self.Context = self.Tree.Config
-
     return self
 end
 
 function AbilityParser:Build()
-    self:Parse(self.Tree)
+    self.Tree.Execute(self, self.Tree)
 end
 
 -- Интерфейс AbilityParser
