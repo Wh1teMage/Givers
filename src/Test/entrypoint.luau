@@ -11,9 +11,11 @@ scopeRegistry:Register('Action', function(self, node)
 
     local behavior = self.BehaviorRegistry:Get(node.Name)
     if (behavior) then behavior(self, node) end
-    if (node.Tag) then self.Tags[node.Tag] = node.Config end
+    if (node.Tag) then
+        self.Tags[node.Tag] = node.Config
+    end
 
-    print(node.Name, self.Tags)
+    --print(node.Name, self.Tags)
 
     for _, child in (node.Children or {}) do
         --print(node.Children[child])
@@ -36,10 +38,14 @@ behaviorRegistry:Register('TriggerEvent', function(self, node)
 
     local selectedBlock = self.Events[node.Config.TagName]
     selectedBlock.TriggerArgs = node.Config
+    
+    --selectedBlock.Config = node.Config
+
     self.Tags[node.Config.TagName] = node.Config
+    
 
-    --print(node.Config.TagName, self.Tags)
-
+    print(node.Config.TagName, self.Tags)
+   -- print(self)
     if handler then handler(self, selectedBlock) end
 end)
 
@@ -49,7 +55,7 @@ behaviorRegistry:Register('OnHit', function(self, node)
 end)
 
 behaviorRegistry:Register('Test', function(self, node)  
-    --print(self.Tags)
+    print(2,self.Tags)
 end)
 
 behaviorRegistry:Register('Hello', function(self, node)
