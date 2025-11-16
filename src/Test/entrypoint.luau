@@ -19,7 +19,7 @@ scopeRegistry:Register('Action', function(self, node)
 
     for _, child in (node.Children or {}) do
         --print(node.Children[child])
-        self:Execute(child)
+        child:Execute()
     end
 end)
 
@@ -44,7 +44,7 @@ behaviorRegistry:Register('TriggerEvent', function(self, node)
     self.Tags[node.Config.TagName] = node.Config
     
 
-    print(node.Config.TagName, self.Tags)
+    --print(node.Config.TagName, self.Tags)
    -- print(self)
     if handler then handler(self, selectedBlock) end
 end)
@@ -55,7 +55,7 @@ behaviorRegistry:Register('OnHit', function(self, node)
 end)
 
 behaviorRegistry:Register('Test', function(self, node)  
-    print(2,self.Tags)
+    --print(2,self.Tags)
 end)
 
 behaviorRegistry:Register('Hello', function(self, node)
@@ -75,8 +75,6 @@ end)
 
 parser.BehaviorRegistry = behaviorRegistry2
 parser.ScopeRegistry = scopeRegistry
-
-
 
 local ability = parser:Create({
     Name = 'Event.OnHit',
@@ -103,8 +101,7 @@ ability:Build()
 
 ability:Execute(
     {
-        Type = 'Action',
-        Name = 'TriggerEvent',
+        Name = 'Action.TriggerEvent',
         Config = {
             test = 123,
             TagName = 'OnHit12321'

@@ -95,7 +95,7 @@ end
 
 function TreeNode:Execute()
     if (not self.InjectedCallback) then return end
-    self.InjectedCallback(self)
+    self.InjectedCallback()
 end
 
 -- Рекурсивный тип узла и интерфейс
@@ -177,7 +177,7 @@ local test = {
 -- Intended for converting ability.behaviors sequences into a node tree.
 function AbilityParser:TransferIntoNodes(structure: any)
     local children = {}
-    
+
     local splitted = string.split(structure.Name :: string, '.')
     if (#splitted < 2) then return end
 
@@ -195,26 +195,32 @@ function AbilityParser:TransferIntoNodes(structure: any)
         name = splitted[2],
         children = children,
         config = structure.Config,
-        callback = self.ScopeRegistry:Get(splitted[1]),
         tag = structure.Tag,
         requestedTags = structure.RequestedTags
     })
+
+    local scope = self.ScopeRegistry:Get(splitted[1])
+
+    rootNode.InjectedCallback = function()
+        if (not scope) then return end
+        scope(self, rootNode)
+    end
 
     return rootNode
 end
 
 function AbilityParser:Execute(structure: any)
-    local block = self:TransferIntoNodes(structure, 'Action.Root')
-    block.Execute(self, block)
+    local block = self:TransferIntoNodes(structure)
+    block:Execute()
 end
 
 function AbilityParser:Create(structure: any)
-    self.Tree = self:TransferIntoNodes(structure, 'Action.Root')
+    self.Tree = self:TransferIntoNodes(structure)
     return self
 end
 
 function AbilityParser:Build()
-    self.Tree.Execute(self, self.Tree)
+    self.Tree:Execute()
 end
 
 -- Интерфейс AbilityParser
